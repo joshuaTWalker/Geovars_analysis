@@ -1,12 +1,30 @@
 # Geovars Pipeline Overview
 This is an overview of the pipeline used to produce the structure graphs that showed clear populations
 
-##### Completed by Novogene
+##### Before beginning
+#
+You'll need to do the following before begining
+1. Open an instance of your preffered shell
+2. Determine which hpc machine you want to use by 
+    * Remotely log into each machine with *ssh* by typing `ssh netid@hpc_machine.extension` where `netid` is your ISU net id, `hpc_machine` is the name of whatever hpc resource you wish to use (i.e. speedy or rit2, etc), and `extension` is the name of the department that the machine is associated with (las for rit2 or ent for speedy). An example of this is `jtwalker@rit2.las.iastate.edu`
+    * Run *htop* to determine which hpc machine is currently being used the least by typing `htop`. To quit *htop*, type `q`. [Guide to understanding htop output](https://peteris.rocks/blog/htop/)
+3. Make a working directory
+    * This can be created with `mkdir new_directory_name`
+4. Copy all geovars sample files nescessary for analysis to the newly created working directory
+    * `cp /path_to_bams/*.bam /home/netid/working_directory/`
+#
+It is also very useful to run things on a `screen`. The command to initiate a `screen` is simply `screen`. If you get kicked off of a remote machine or don't want to run things on the head node (please don't run things on the head node) use a screen. 
+* To detatch from a screen so that you can come back to it later hold the `CONTROL` key and press `a` and `d`.
+* To completely exit a `screen` session type `exit`
+
+Another useful command to remember is `CONTROL-c` which will kill whatever process you are currently running
+#
+##### Steps completed by Novogene
 1. Samples are sequenced, raw `.fastq`, clean `.fastq`, and reference genome aligned `.bam` files are returned
 #
 #
 The following are the steps that I took in order to produce the *STRUCTURE* graphs which showed nice distinction between populations
-##### Our analysis steps
+##### Our pipeline
 2. `.bam` files are merged into single '.bam'
 3. Variants are called from merged `.bam`, producing a variant call file `.vcf`
 4. `.vcf` is filtered to remove sites with low coverage, sites with low number of genotyped individuals, etc. 
@@ -77,7 +95,7 @@ where `-Ov` specifies vcf output
 ##### 4. `.vcf` is filtered to remove sites with low coverage, sites with low number of genotyped individuals, etc. 
 #
 #
-This is one of the most important steps, but is, in my opionion, the most difficult. You'll need to remove variants that are errors and otherwise don't represent the biology of the samples, without removing variants that might alter your output in important ways. To filter use *Plink*. The general usage of plink is 
+This is one of the most important steps, but is, in my opinion, the most difficult. You'll need to remove variants that are errors and otherwise don't represent the biology of the samples, without removing variants that might alter your output in important ways. To filter use *Plink*. The general usage of plink is 
 ```
 module load plink
 plink --allow-extra-chr --input_file_type input_file.extension --filter_name parameter --desired_output_file_type -out output_filename
