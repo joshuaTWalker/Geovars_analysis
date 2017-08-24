@@ -12,6 +12,8 @@ You'll need to do the following before begining
     * This can be created with `mkdir new_directory_name`
 4. Copy all geovars sample files nescessary for analysis to the newly created working directory
     * `cp /path_to_bams/*.bam /home/netid/working_directory/`
+5. Remove underscores from sample names
+    * Novogene renamed our samples when they sequenced them. The new names contain underscores which for some reason will absolutely destroy output files when run through *Samtools*, *BCFTools*, *GATK*, etc. I've written a script that removes underscores from sample names. To run this script, copy it into your working directort and type `bash remove_underscores.sh`
 #
 It is also very useful to run things on a `screen`. The command to initiate a `screen` is simply `screen`. If you get kicked off of a remote machine or don't want to run things on the head node (please don't run things on the head node) use a screen. 
 * To detatch from a screen so that you can come back to it later hold the `CONTROL` key and press `a` and `d`.
@@ -95,7 +97,7 @@ where `-Ov` specifies vcf output
 ##### 4. `.vcf` is filtered to remove sites with low coverage, sites with low number of genotyped individuals, etc. 
 #
 #
-This is one of the most important steps, but is, in my opinion, the most difficult. You'll need to remove variants that are errors and otherwise don't represent the biology of the samples, without removing variants that might alter your output in important ways. To filter use *Plink*. The general usage of plink is 
+This is one of the most important steps, but is, in my opionion, the most difficult. You'll need to remove variants that are errors and otherwise don't represent the biology of the samples, without removing variants that might alter your output in important ways. To filter use *Plink*. The general usage of plink is 
 ```
 module load plink
 plink --allow-extra-chr --input_file_type input_file.extension --filter_name parameter --desired_output_file_type -out output_filename
