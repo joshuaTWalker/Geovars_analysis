@@ -1,7 +1,7 @@
 # Geovars Analysis Pipeline
 This is an overview of the pipeline used to produce the structure graphs that showed a clear distinction between populations
 
-### Before beginning
+## Before beginning
 
 You'll need to do the following before begining:
 1. Open an instance of your prefered shell
@@ -13,7 +13,7 @@ You'll need to do the following before begining:
     * This can be created with `mkdir new_directory_name`
 4. Copy all geovars sample files nescessary for analysis to the newly created working directory
     * `cp /path_to_bams/*.bam /home/netid/working_directory/`
-### Useful bash commands and programs
+## Useful bash commands and programs
 * `CONTROL-c` will kill whatever process you are currently running
 * `screen` - It is very useful to run things on a `screen`. The command to initiate a `screen` is simply `screen`. If you get kicked off of a remote machine due to a poor connection or something similar, or don't want to run things on the head node (please don't run things on the head node) use a screen. 
     * To detatch from a screen so that you can come back to it later hold the `CONTROL` key and press `a` and `d`.
@@ -32,11 +32,11 @@ You'll need to do the following before begining:
     * These commands should be run from a *shell* instance in which you are not *ssh*'d into a remote machine
 * `TAB` - Sick of typing the full name of a file or command? Just hit the `TAB` key
 
-### Steps completed by Novogene
+## Steps completed by Novogene
 1. Samples were sequenced, raw `.fastq`, clean `.fastq`, and reference genome aligned `.bam` files are returned
 
 The following are the steps that I took in order to produce the *STRUCTURE* graphs which showed nice distinction between populations
-### Our pipeline
+## Our pipeline
 2. `.bam` files are merged into single `.bam`
 3. Variants are called from merged `.bam`, producing a variant call file `.vcf`
 4. `.vcf` is filtered to remove sites with low coverage, sites with low number of genotyped individuals, etc. 
@@ -45,7 +45,7 @@ The following are the steps that I took in order to produce the *STRUCTURE* grap
 
 The `.bam` files that Novogene produced (using the *Burrows-Wheeler aligner*, or *BWA* (specifically `BWA-mem`), are a good starting place, as they have supposedly had bad reads, over-represented sequences, etc. filtered from them. It might still be worth your time to look at the QC reports related to your samples in order to decide whether or not you want to start from initial `.fastq` files. 
 
-### 2. `.bam` files are merged into single `.bam`
+## 2. `.bam` files are merged into single `.bam`
 It is best to call variants from a single merged bam (add source here). To do this you can use *Picard*. In general, if you wanted to merge `.bam` files with *Picard* you would use the following syntax:
 ```
 module load picard
@@ -76,7 +76,7 @@ A file, `large_picard_job_creator.sh` in the associated Github repo contains thi
 **THIS STEP WILL TAKE SEVERAL HOURS - POSSIBLY EVEN A DAY OR SO AND WILL TAKE A LARGE AMOUNT OF RAM  - BEST TO USE SPEEDY WHEN IT IS NOT BEING FULLY USED**
 
 
-### 3. Variants are called from merged `.bam`, producing a variant call file `.vcf`
+## 3. Variants are called from merged `.bam`, producing a variant call file `.vcf`
 
 
 Calling variants is a multistep process and can be a headache. Hopefully, numbering the steps in variant calling will make it a bit simpler for you
@@ -100,7 +100,9 @@ where `-C` adjusts mapping quality based on phred score
 where `-Ov` specifies vcf output
 `-o` points to output file
 
-### 4. `.vcf` is filtered to remove sites with low coverage, sites with low number of genotyped individuals, etc. 
+## 4. `.vcf` is filtered to remove sites with low coverage, sites with low number of genotyped individuals, etc. 
+
+Before filtering you'll need to remove the underscores from the sample names in your `.vcf` file. To do this, simply type `sed -i -e 's/S\_/S/g' filename.vcf`. This will change all instances of `S_` in your `.vcf` to `S`, and won't screw up the file formatting in any way. This step is nescessary because downstream programs don't like underscores for some reason
 
 This is one of the most important steps, but is, in my opionion, the most difficult. You'll need to remove variants that are errors and otherwise don't represent the biology of the samples, without removing variants that might alter your output in important ways. To filter your `.vcf` file, use *Plink*. The general usage of *Plink* is 
 ```
@@ -115,7 +117,7 @@ Where `--maf` specifies minor allele frequency to filter on
 With a larger set of samples you'll need to play around with this more. Sorry that I can't offer more help
 
 
-### 5. *STRUCTURE* is run to evaluate population structure
+## 5. *STRUCTURE* is run to evaluate population structure
 You'll need to download *PGDSpider* to your local machine if you don't already have it
 [PGDSpider](http://www.cmpg.unibe.ch/software/PGDSpider/)
 
@@ -132,7 +134,7 @@ After converting your `.ped` and `.map` files into a `.strct_in` file via *PGDSp
 
 *STRUCTURE* requires that two files are present in your working directory, `mainparams` and `extraparams`. Both are textfiles that contain parameters to be set so that you can run *STRUCTURE* in a way that reflects your dataset. 
 
-##### Manuals and other potentially useful links
+## Manuals and other potentially useful links
 ###### BCFtools
 * [Download](http://www.htslib.org/download/)
 * [Manual page](https://samtools.github.io/bcftools/bcftools.html)
